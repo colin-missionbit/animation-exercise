@@ -65,6 +65,7 @@ public class FlyingCreature {
         }
     }
 
+    //This handles my mouse clicks
     public boolean handleClick(Vector3 touchPos){
         boolean hit = myImage.getBoundingRectangle().contains(touchPos.x, touchPos.y);
         if(hit){
