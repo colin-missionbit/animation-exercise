@@ -10,23 +10,28 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 
 public class FlyingCreature {
+
     private Sprite myImage;
-    private Vector2 velocity;
-
     private SpriteBatch myBatch;
-
+    private Vector2 velocity;
     private ParticleEffect effect;
-
     private boolean alive = true;
 
     public FlyingCreature(SpriteBatch batch){
         myBatch = batch;
         myImage = new Sprite( new Texture(Gdx.files.internal("images/ufo.png")));
 
-        velocity = new Vector2(MathUtils.random() * 300, MathUtils.random() * 300);
 
         effect = new ParticleEffect();
         effect.load(Gdx.files.internal("effects/explode.p"), Gdx.files.internal("images"));
+        reset();
+    }
+
+    public void reset(){
+        alive = true;
+        velocity = new Vector2(MathUtils.random() * 300, MathUtils.random() * 300);
+        myImage.setX(0);
+        myImage.setY(0);
     }
 
     public void update(){
@@ -55,7 +60,6 @@ public class FlyingCreature {
         }
     }
 
-
     public void draw(){
         if(alive) {
             myImage.draw(myBatch);
@@ -65,21 +69,20 @@ public class FlyingCreature {
         }
     }
 
-    //This handles my mouse clicks!
     public boolean handleClick(Vector3 touchPos){
         boolean hit = myImage.getBoundingRectangle().contains(touchPos.x, touchPos.y);
         if(hit){
             if(alive){
-                // Calculate the center of our sprite by adding half of the width to the x coordinate
-                // and half of the height to the y coordinate
-                // then move our effect there
                 effect.setPosition(myImage.getX() + myImage.getWidth() / 2.0f, myImage.getY() + myImage.getHeight() / 2.0f);
-
-                // Start our effect
                 effect.start();
             }
             alive = false;
         }
         return hit;
     }
+
+    public boolean isActive(){
+        return alive || !effect.isComplete();
+    }
+
 }
